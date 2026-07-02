@@ -1,5 +1,4 @@
-@"
-__pycache__/
+﻿__pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
@@ -12,4 +11,3 @@ env/
 .idea/
 .vscode/
 *.sqlite3
-"@ | Out-File -Encoding utf8 .gitignore

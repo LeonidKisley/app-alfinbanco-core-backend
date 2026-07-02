@@ -10,14 +10,14 @@ class PreEvalIn(BaseModel):
     # Forzamos a que el documento sea un DNI válido de 8 dígitos para el mercado peruano
     numero_documento: str = Field(..., min_length=8, max_length=8, description="DNI del cliente (8 dígitos)")
     nombres: str = ""
-    tipo_negocio: str = ""  # Útil para los créditos comerciales/emprendedor de ALFIN
+    tipo_negocio: str = "" 
     ingresos_estimados: float = 0
     monto_solicitado: float = 0
-    destino_credito: str = ""  # Capital de Trabajo, Consumo, etc.
+    destino_credito: str = ""  
 
 
 class PreEvalOut(BaseModel):
-    calificacion: str   # APTO / REVISAR / NO_PROCEDE
+    calificacion: str   
     motivo: str
     puntaje: int
     campana_sugerida: Optional[str] = None  # Añadimos valor comercial de ALFIN Banco

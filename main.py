@@ -5,10 +5,9 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+# Importamos únicamente los routers operacionales activos
 from app.routes import (
-    rtr_auth, rtr_cartera, rtr_ficha, rtr_cobranza, rtr_preeval, rtr_buro,
-    rtr_solicitudes, rtr_reportes, rtr_alertas, rtr_campanas, rtr_sync,
-    rtr_cliente,
+    rtr_auth, rtr_cartera, rtr_preeval, rtr_campanas, rtr_cliente
 )
 
 # Inicializamos FastAPI desactivando las docs por defecto (docs_url=None) 
@@ -20,11 +19,9 @@ app = FastAPI(
     swagger_ui_parameters={"deepLinking": True, "defaultModelsExpandDepth": -1} 
 )
 
-# 🛠️ TRUCO DE RUTA ABSOLUTA: Calcula la ubicación exacta real de tu carpeta static
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
-# Montamos la carpeta usando la ruta absoluta calculada por Python
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 app.add_middleware(
@@ -35,20 +32,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(rtr_auth.router,    prefix="/auth",     tags=["Auth"])
-app.include_router(rtr_cartera.router, prefix="/cartera",  tags=["Cartera"])
-app.include_router(rtr_ficha.router,   prefix="/clientes", tags=["Ficha"])
-app.include_router(rtr_cobranza.router, prefix="/cobranza", tags=["Cobranza"])
-app.include_router(rtr_preeval.router, prefix="/pre-evaluar", tags=["PreEvaluacion"])
-app.include_router(rtr_buro.router,    prefix="/buro",      tags=["Buro"])
-app.include_router(rtr_solicitudes.router, prefix="/solicitudes", tags=["Solicitudes"])
-app.include_router(rtr_reportes.router, prefix="/reportes", tags=["Reportes"])
-app.include_router(rtr_alertas.router, prefix="/alertas", tags=["Alertas"])
-app.include_router(rtr_campanas.router, prefix="/campanas", tags=["Campanas"])
-app.include_router(rtr_sync.router, prefix="/sync", tags=["Sync (Puente al Core)"])
+# --- REGISTRO DE ROUTERS ACTIVOS DE ALFIN BANCO ---
+app.include_router(rtr_auth.router,    prefix="/auth",         tags=["Auth - Fuerza de Ventas"])
+app.include_router(rtr_cartera.router, prefix="/cartera",      tags=["Cartera - Agenda Diaria"])
+app.include_router(rtr_preeval.router, prefix="/pre-evaluar",  tags=["PreEvaluacion - Créditos"])
+app.include_router(rtr_campanas.router, prefix="/campanas",     tags=["Campanas - Productos Comerciales"])
 
 # App de clientes (appbanco / Flutter clientes) — login DNI + productos
-app.include_router(rtr_cliente.router, prefix="/cliente", tags=["Cliente (App)"])
+app.include_router(rtr_cliente.router, prefix="/cliente",      tags=["Cliente - Canales Digitales"])
 
 
 # --- SOBREESCRITURA DE LA RUTA /DOCS CON TU ICONO LOCAL ---
